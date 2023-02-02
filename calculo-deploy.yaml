@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculo-deployment
+  namespace: production
+  labels:
+    app: calculo
+spec:
+  selector:
+    matchLabels:
+      app: calculo
+  template:
+    metadata:
+      labels:
+        app: calculo
+    spec:
+      containers:
+      - name: moodle
+        image: georgeribeiro/moodle:3.9
+        imagePullPolicy: Always
+        env:
+        - name: DB_HOST
+          value: "200.129.37.50"
+        - name: DB_PORT
+          value: "32306"
+        - name: DB_NAME
+          value: "moodle_calculo"
+        - name: DB_USERNAME
+          value: "moodle_calculo"
+        - name: DB_PASSWORD
+          value: "HsGf2mDLF7HRMey7"
+        - name: DB_PREFIX
+          value: "mdl_"
+        - name: WWWROOT
+          value: "https://calculo.sobral.ufc.br"
+        - name: SSLPROXY
+          value: "1"
+        - name: DATAROOT
+          value: "/var/www/html/moodledata"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: moodle-volume
+        - mountPath: /etc/localtime
+          name: tz-fortaleza
+      volumes:
+      - name: moodle-volume
+        hostPath:
+          path: /home/nix/sites/calculo/moodle
+          type: Directory
+      - name: tz-fortaleza
+        hostPath:
+          path: /usr/share/zoneinfo/America/Fortaleza
+          type: File
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: calculo-service
+  namespace: production
+spec:
+  selector:
+    app: calculo
+  ports:
+  - name: http
+    protocol: TCP
+    port: 80
+

@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  moodle:
+    build: ./moodle-docker
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=moodle_calculo
+      - DB_USERNAME=moodle_calculo
+      - DB_PASSWORD=HsGf2mDLF7HRMey7
+      - DB_PREFIX=mdl_
+      - WWWROOT=http://localhost 
+      - SSLPROXY=0
+      - DATAROOT=/var/www/html/moodledata
+    volumes:
+      - "./moodle:/var/www/html"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7.41
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=moodle_calculo
+      - MYSQL_USER=moodle_calculo
+      - MYSQL_PASSWORD=HsGf2mDLF7HRMey7
+    volumes:
+      - "./moodle_calculo.sql:/docker-entrypoint-initdb.d/moodle_calculo.sql"
+      - "./data:/var/lib/mysql"
+    ports:
+      - "3306:3306"
