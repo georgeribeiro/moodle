@@ -1,6 +1,6 @@
 .git
-moodle
+moodle*
 *.sql
 data
 .vscode
-moodle.tar.gz
+*.tar.gz

@@ -43,8 +43,6 @@ RUN set -ex && \
 
 WORKDIR /var/www/html
 
-COPY default /etc/nginx/sites-available
-
 COPY docker-entrypoint.sh /usr/local/bin
 
 COPY install_database.sh /usr/local/bin
@@ -52,6 +50,8 @@ COPY install_database.sh /usr/local/bin
 COPY wait-for-it.sh /usr/local/bin
 
 COPY config.php /config.php
+
+COPY default.conf /etc/nginx/sites-available/default
 
 VOLUME ["/var/cache/nginx"]
 
