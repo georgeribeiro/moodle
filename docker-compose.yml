@@ -1,21 +1,21 @@
 version: "3.8"
 services:
   moodle:
-    build: ./moodle-docker
+    build: ./docker
     ports:
       - "80:80"
     environment:
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=moodle_coresearch
-      - DB_USERNAME=moodle_coresearch
+      - DB_NAME=moodle_calculo
+      - DB_USERNAME=moodle_calculo
       - DB_PASSWORD=HsGf2mDLF7HRMey7
       - DB_PREFIX=mdl_
-      - WWWROOT=http://co-research.sobral.ufc.br 
+      - WWWROOT=http://localhost
       - SSLPROXY=0
       - DATAROOT=/var/www/html/moodledata
     volumes:
-      - "./moodle-coresearch:/var/www/html"
+      - "./moodle:/var/www/html"
     depends_on:
       - db
   db:
@@ -24,11 +24,11 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=moodle_coresearch
-      - MYSQL_USER=moodle_coresearch
+      - MYSQL_DATABASE=moodle_calculo
+      - MYSQL_USER=moodle_calculo
       - MYSQL_PASSWORD=HsGf2mDLF7HRMey7
     volumes:
-      - "./moodle_coresearch.sql:/docker-entrypoint-initdb.d/moodle_coresearch.sql"
+      - "./moodle_calculo.sql:/docker-entrypoint-initdb.d/moodle_calculo.sql"
       - "./data:/var/lib/mysql"
     ports:
       - "3306:3306"
