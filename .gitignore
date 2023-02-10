@@ -2,5 +2,6 @@
 moodle*
 *.sql
 data
+data.*
 .vscode
 *.tar.gz

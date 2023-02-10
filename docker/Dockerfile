@@ -1,9 +1,8 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
  
 ENV NGINX_ROOT=/var/www/html \
-  MOODLE_LIB_DIR=/var/lib/moodle \
   WWWROOT=localhost \
-  DATAROOT=/var/lib/html/moodledata \
+  DATAROOT=/var/lib/moodledata \
   DB_TYPE=mysqli \
   ADMIN_USER=admin \
   FULLNAME=moodle \
@@ -12,13 +11,13 @@ ENV NGINX_ROOT=/var/www/html \
 RUN set -ex && \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y curl nginx sendmail php7.3-cli  php7.3-fpm  php7.3-iconv  php7.3-mbstring  php7.3-curl  \
-    php7.3-tokenizer  php7.3-xmlrpc php7.3-soap php7.3-ctype php7.3-zip php7.3-gd php7.3-simplexml php7.3-dom  \
-    php7.3-xml php7.3-intl  php7.3-json php7.3-mysql  sudo && \
+  apt-get install -y curl nginx sendmail php7.4-cli  php7.4-fpm  php7.4-iconv  php7.4-mbstring  php7.4-curl  \
+    php7.4-tokenizer  php7.4-xmlrpc php7.4-soap php7.4-ctype php7.4-zip php7.4-gd php7.4-simplexml php7.4-dom  \
+    php7.4-xml php7.4-intl  php7.4-json php7.4-mysql  sudo && \
   ln -sf /dev/stdout /var/log/nginx/access.log && \
   ln -sf /dev/stderr /var/log/nginx/error.log && \
   rm /etc/nginx/sites-available/default && \
-  echo 'security.limit_extensions = .php' >> '/etc/php/7.3/fpm/pool.d/www.conf' && \
+  echo 'security.limit_extensions = .php' >> '/etc/php/7.4/fpm/pool.d/www.conf' && \
   {\
     echo '[global]'; \
     echo 'error_log = /proc/self/fd/2'; \
@@ -32,12 +31,12 @@ RUN set -ex && \
     echo 'php_admin_flag[display_errors] = off'; \
     echo 'php_admin_value[error_reporting] = E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED'; \
     echo 'php_admin_value[error_log] = /proc/self/fd/2'; \
-    } | tee /etc/php/7.3/fpm/pool.d/zzz-php.conf && \
-  mkdir -p ${MOODLE_LIB_DIR} && \
+    } | tee /etc/php/7.4/fpm/pool.d/zzz-php.conf && \
   mkdir -p ${DATAROOT} && \
   chown -R www-data:www-data ${NGINX_ROOT} && \
   chown -R www-data:www-data ${DATAROOT} && \
   chmod -R 755 ${NGINX_ROOT} && \
+  chmod -R 755 ${DATAROOT} && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -59,4 +58,4 @@ ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 443 80
 
-CMD ["/bin/sh", "-c", "service php7.3-fpm start && nginx -g \"daemon off;\""]
+CMD ["/bin/sh", "-c", "service php7.4-fpm start && nginx -g \"daemon off;\""]

@@ -7,15 +7,16 @@ services:
     environment:
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=moodle_calculo
-      - DB_USERNAME=moodle_calculo
+      - DB_NAME=moodle_coresearch
+      - DB_USERNAME=moodle_coresearch
       - DB_PASSWORD=HsGf2mDLF7HRMey7
       - DB_PREFIX=mdl_
       - WWWROOT=http://localhost
       - SSLPROXY=0
-      - DATAROOT=/var/www/html/moodledata
+      - DATAROOT=/var/lib/moodledata
     volumes:
       - "./moodle:/var/www/html"
+      - "./moodledata:/var/lib/moodledata"
     depends_on:
       - db
   db:
@@ -24,11 +25,11 @@ services:
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=moodle_calculo
-      - MYSQL_USER=moodle_calculo
+      - MYSQL_DATABASE=moodle_coresearch
+      - MYSQL_USER=moodle_coresearch
       - MYSQL_PASSWORD=HsGf2mDLF7HRMey7
     volumes:
-      - "./moodle_calculo.sql:/docker-entrypoint-initdb.d/moodle_calculo.sql"
+      - "./moodle_coresearch.sql:/docker-entrypoint-initdb.d/moodle_coresearch.sql"
       - "./data:/var/lib/mysql"
     ports:
       - "3306:3306"
