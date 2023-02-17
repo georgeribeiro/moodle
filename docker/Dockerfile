@@ -52,6 +52,8 @@ COPY config.php /config.php
 
 COPY default.conf /etc/nginx/sites-available/default
 
+COPY php.ini /etc/php/7.4/fpm/php.ini
+
 VOLUME ["/var/cache/nginx"]
 
 ENTRYPOINT ["docker-entrypoint.sh"]
