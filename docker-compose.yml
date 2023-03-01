@@ -5,11 +5,12 @@ services:
     ports:
       - "80:80"
     environment:
+      - DB_TYPE=mariadb
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=moodle_coresearch
-      - DB_USERNAME=moodle_coresearch
-      - DB_PASSWORD=HsGf2mDLF7HRMey7
+      - DB_NAME=moodle_calculo
+      - DB_USERNAME=moodle_calculo
+      - DB_PASSWORD=secret
       - DB_PREFIX=mdl_
       - WWWROOT=http://localhost
       - SSLPROXY=0
@@ -19,17 +20,24 @@ services:
       - "./moodledata:/var/lib/moodledata"
     depends_on:
       - db
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
   db:
-    image: mysql:5.7.41
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: mariadb
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=moodle_coresearch
-      - MYSQL_USER=moodle_coresearch
-      - MYSQL_PASSWORD=HsGf2mDLF7HRMey7
+      - MARIADB_ROOT_PASSWORD=root
+      - MARIADB_DATABASE=moodle_calculo
+      - MARIADB_USER=moodle_calculo
+      - MARIADB_PASSWORD=secret
+    command: --innodb_large_prefix --innodb-file-format=barracuda
     volumes:
-      - "./moodle_coresearch.sql:/docker-entrypoint-initdb.d/moodle_coresearch.sql"
-      - "./data:/var/lib/mysql"
-    ports:
-      - "3306:3306"
+     # - "./moodle_calculo.sql:/docker-entrypoint-initdb.d/moodle_calculo.sql"
+     - "./data:/var/lib/mysql"
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
