@@ -18,7 +18,7 @@ RUN set -ex && \
   ln -sf /dev/stderr /var/log/nginx/error.log && \
   rm /etc/nginx/sites-available/default && \
   echo 'security.limit_extensions = .php' >> '/etc/php/7.4/fpm/pool.d/www.conf' && \
-  {\
+  { \
     echo '[global]'; \
     echo 'error_log = /proc/self/fd/2'; \
     echo 'log_limit = 8192'; \
@@ -31,7 +31,7 @@ RUN set -ex && \
     echo 'php_admin_flag[display_errors] = off'; \
     echo 'php_admin_value[error_reporting] = E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED'; \
     echo 'php_admin_value[error_log] = /proc/self/fd/2'; \
-    } | tee /etc/php/7.4/fpm/pool.d/zzz-php.conf && \
+  } | tee /etc/php/7.4/fpm/pool.d/zzz-php.conf && \
   mkdir -p ${DATAROOT} && \
   chown -R www-data:www-data ${NGINX_ROOT} && \
   chown -R www-data:www-data ${DATAROOT} && \
