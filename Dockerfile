@@ -11,9 +11,9 @@ ENV NGINX_ROOT=/var/www/html \
 RUN set -ex && \
   apt-get update && \
   apt-get upgrade -y && \
-  apt-get install -y curl nginx sendmail php7.4-cli  php7.4-fpm  php7.4-iconv  php7.4-mbstring  php7.4-curl  \
+  apt-get install -y curl nginx sendmail php7.4-cli php7.4-fpm php7.4-iconv php7.4-mbstring php7.4-curl  \
     php7.4-tokenizer  php7.4-xmlrpc php7.4-soap php7.4-ctype php7.4-zip php7.4-gd php7.4-simplexml php7.4-dom  \
-    php7.4-xml php7.4-intl  php7.4-json php7.4-mysql  sudo && \
+    php7.4-xml php7.4-intl  php7.4-json php7.4-mysql sudo wget && \
   ln -sf /dev/stdout /var/log/nginx/access.log && \
   ln -sf /dev/stderr /var/log/nginx/error.log && \
   rm /etc/nginx/sites-available/default && \
@@ -39,6 +39,10 @@ RUN set -ex && \
   chmod -R 755 ${DATAROOT} && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
+
+# RUN set -ex && \
+#   wget -O /tmp/moodle.tgz https://download.moodle.org/download.php/direct/stable401/moodle-4.1.1.tgz && \
+#   tar xfzv /tmp/moodle.tgz --strip-components 1 -C /var/www/html
 
 WORKDIR /var/www/html
 

@@ -18,12 +18,20 @@ $CFG->dboptions = array (
 );
 
 $CFG->wwwroot   = '${WWWROOT}';
-$CFG->dataroot  = '${DATAROOT}';
+$CFG->dataroot  = '/var/lib/moodledata';
 $CFG->admin     = 'admin';
 
 $CFG->sslproxy = ${SSLPROXY};
 
 $CFG->directorypermissions = 02777;
+
+$CFG->xsendfile = 'X-Accel-Redirect';
+$CFg->xsendfilealiases = array(
+  '/dataroot/' => $CFG->dataroot,
+  '/cachedir/' =>  $CFG->dataroot . '/cache',    // for custom $CFG->cachedir locations
+  '/localcachedir/' => $CFG->dataroot . '/cache',    // for custom $CFG->localcachedir locations
+  '/tempdir/'  => $CFG->dataroot . '/temp',     // for custom $CFG->tempdir locations
+);
 
 require_once(__DIR__ . '/lib/setup.php');
 

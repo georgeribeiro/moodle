@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   moodle:
-    build: ./docker
+    build: .
     ports:
       - "80:80"
     environment:
@@ -14,10 +14,9 @@ services:
       - DB_PREFIX=mdl_
       - WWWROOT=http://localhost
       - SSLPROXY=0
-      - DATAROOT=/var/lib/moodledata
     volumes:
-      - "./moodle:/var/www/html"
       - "./moodledata:/var/lib/moodledata"
+      - "./moodle:/var/www/html"
     depends_on:
       - db
     deploy:
@@ -35,7 +34,7 @@ services:
     command: --innodb_large_prefix --innodb-file-format=barracuda
     volumes:
      # - "./moodle_calculo.sql:/docker-entrypoint-initdb.d/moodle_calculo.sql"
-     - "./data:/var/lib/mysql"
+     - "./data/mysql:/var/lib/mysql"
     deploy:
       resources:
         limits:
