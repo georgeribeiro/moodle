@@ -1,24 +1,27 @@
 FROM debian:bullseye-slim
- 
+
+LABEL org.opencontainers.image.authors="George Ribeiro <georgeribeirorm@gmail.com>"
+LABEL moodle.version="4.1"
+
 ENV NGINX_ROOT=/var/www/html \
-  WWWROOT=localhost \
-  DATAROOT=/var/lib/moodledata \
-  DB_TYPE=mysqli \
-  ADMIN_USER=admin \
-  FULLNAME=moodle \
-  SHORTNAME=moodle
+    WWWROOT=localhost \
+    DATAROOT=/var/lib/moodledata \
+    DB_TYPE=mysqli \
+    ADMIN_USER=admin \
+    FULLNAME=moodle \
+    SHORTNAME=moodle
 
 RUN set -ex && \
-  apt-get update && \
-  apt-get upgrade -y && \
-  apt-get install -y curl nginx sendmail php7.4-cli php7.4-fpm php7.4-iconv php7.4-mbstring php7.4-curl  \
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl nginx sendmail php7.4-cli php7.4-fpm php7.4-iconv php7.4-mbstring php7.4-curl  \
     php7.4-tokenizer  php7.4-xmlrpc php7.4-soap php7.4-ctype php7.4-zip php7.4-gd php7.4-simplexml php7.4-dom  \
-    php7.4-xml php7.4-intl  php7.4-json php7.4-mysql sudo wget && \
-  ln -sf /dev/stdout /var/log/nginx/access.log && \
-  ln -sf /dev/stderr /var/log/nginx/error.log && \
-  rm /etc/nginx/sites-available/default && \
-  echo 'security.limit_extensions = .php' >> '/etc/php/7.4/fpm/pool.d/www.conf' && \
-  { \
+    php7.4-xml php7.4-intl  php7.4-json php7.4-mysql sudo wget locales && \
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log && \
+    rm /etc/nginx/sites-available/default && \
+    echo 'security.limit_extensions = .php' >> '/etc/php/7.4/fpm/pool.d/www.conf' && \
+    { \
     echo '[global]'; \
     echo 'error_log = /proc/self/fd/2'; \
     echo 'log_limit = 8192'; \
@@ -31,18 +34,18 @@ RUN set -ex && \
     echo 'php_admin_flag[display_errors] = off'; \
     echo 'php_admin_value[error_reporting] = E_ALL & ~E_NOTICE & ~E_WARNING & ~E_STRICT & ~E_DEPRECATED'; \
     echo 'php_admin_value[error_log] = /proc/self/fd/2'; \
-  } | tee /etc/php/7.4/fpm/pool.d/zzz-php.conf && \
-  mkdir -p ${DATAROOT} && \
-  chown -R www-data:www-data ${NGINX_ROOT} && \
-  chown -R www-data:www-data ${DATAROOT} && \
-  chmod -R 755 ${NGINX_ROOT} && \
-  chmod -R 755 ${DATAROOT} && \
-  apt-get clean && \
-  rm -rf /var/lib/apt/lists/*
-
-# RUN set -ex && \
-#   wget -O /tmp/moodle.tgz https://download.moodle.org/download.php/direct/stable401/moodle-4.1.1.tgz && \
-#   tar xfzv /tmp/moodle.tgz --strip-components 1 -C /var/www/html
+    } | tee /etc/php/7.4/fpm/pool.d/zzz-php.conf && \
+    mkdir -p ${DATAROOT} && \
+    chown -R www-data:www-data ${NGINX_ROOT} && \
+    chown -R www-data:www-data ${DATAROOT} && \
+    chmod -R 755 ${NGINX_ROOT} && \
+    chmod -R 755 ${DATAROOT} && \
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    sed -i -e 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/' /etc/locale.gen && \
+    dpkg-reconfigure --frontend=nointeractive locales && \
+    update-locale LANG=pt_BR.UTF-8 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html
 
